@@ -2,6 +2,7 @@ const router = require('express').Router()
 
 //import the projects db
 const Projects = require('../data/helpers/projectModel')
+const Actions = require('../data/helpers/actionModel')
 
 
 router.post('/', validateProject, (req, res) => {
@@ -12,6 +13,10 @@ router.post('/', validateProject, (req, res) => {
         .catch(err => {
             res.status(500).json({ errorMessage: "Server failed to create a new project!" })
         })
+})
+
+router.post('/:id/actions', validateProjectId, (req, res) => {
+
 })
 
 router.get('/', (req, res) => {
@@ -28,8 +33,22 @@ router.get('/:id', validateProjectId, (req, res) => {
     res.status(200).json(req.project)
 })
 
+router.get('/:id/actions', validateProjectId, (req, res) => {
+    Projects.getProjectActions(req.project.id)
+        .then(actions => {
+            if (actions.length) {
+                res.status(200).json(actions)
+            } else {
+                res.status(404).json({ errorMessage: "No actions found for this project!" })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ errorMessage: "Server failed to retrieve the actions for this project!" })
+        })
+})
+
 router.delete('/:id', validateProjectId, (req, res) => {
-    Projects.remove(req.params.id)
+    Projects.remove(req.project.id)
         .then(count => {
             if (count) {
                 res.status(200).json(req.project)
@@ -43,7 +62,7 @@ router.delete('/:id', validateProjectId, (req, res) => {
 })
 
 router.put('/:id', validateProjectId, validateProject, (req, res) => {
-    Projects.update(req.params.id, req.body)
+    Projects.update(req.project.id, req.body)
         .then(project => {
             if (project) {
                 res.status(200).json(project)
@@ -86,6 +105,18 @@ function validateProjectId(req, res, next) {
         .catch(err => {
             res.status(500).json({ message: "Server failed to find a project with that ID!" })
         })
+}
+
+function validateAction(req, res, next) {
+    if (req.body.name && req.body.description) {
+        next()
+    } else if (!req.body.name) {
+        res.status(400).json({ errorMessage: "PLease provide a project name!" })
+    } else if (!req.body.description) {
+        res.status(400).json({ errorMessage: "PLease provide a project description!" })
+    } else {
+        res.status(400).json({ errorMessage: "PLease provide a project name and description!" })
+    }
 }
 
 module.exports = router
