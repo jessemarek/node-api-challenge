@@ -12,3 +12,13 @@ I need this code, but don't know where, perhaps should make some middleware, don
 
 Go code!
 */
+
+// import the server from server.js
+const server = require('./server')
+
+//Define the PORT and have server listen for requests
+const PORT = process.env.PORT || 8000
+
+server.listen(PORT, () => {
+    console.log(`\n=== Server is listening on PORT ${PORT} ===\n`)
+})
