@@ -12,10 +12,11 @@ I need this code, but don't know where, perhaps should make some middleware, don
 
 Go code!
 */
-const express = require('express')
 
-const server = express()
+// import the server from server.js
+const server = require('./server')
 
+//Define the PORT and have server listen for requests
 const PORT = process.env.PORT || 8000
 
 server.listen(PORT, () => {
