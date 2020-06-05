@@ -12,3 +12,12 @@ I need this code, but don't know where, perhaps should make some middleware, don
 
 Go code!
 */
+const express = require('express')
+
+const server = express()
+
+const PORT = process.env.PORT || 8000
+
+server.listen(PORT, () => {
+    console.log(`\n=== Server is listening on PORT ${PORT} ===\n`)
+})

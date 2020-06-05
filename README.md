@@ -40,11 +40,15 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 
 - [ ] Mention two parts of Express that you learned about this week.
 
+    *That it comes with some default or built in middleware that can be turned on if you need/want.*
+
 - [ ] Describe Middleware?
 
 - [ ] Describe a Resource?
 
 - [ ] What can the API return to help clients know if a request was successful?
+
+    *HTTP Status Codes*
 
 - [ ] How can we partition our application into sub-applications?
 
