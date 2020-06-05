@@ -44,13 +44,19 @@ Demonstrate your understanding of this Sprint's concepts by answering the follow
 
 - [ ] Describe Middleware?
 
+    *Middleware as array of functions that get executed in the order they are introduced into the server code. There are different types of middleware. Built-in MW that is provided to us with a library or framework we can switch on, 3rd-party MW we add to a project using `npm` and Custom MW that we write ourselves.*
+
 - [ ] Describe a Resource?
+
+    *A resource is content on our server. It can take many shapes such as a text file, web page, videos, images or dynamic data. In a RESTful envirnoment each resource is managed with a single URL endpoint.*
 
 - [ ] What can the API return to help clients know if a request was successful?
 
     *HTTP Status Codes*
 
 - [ ] How can we partition our application into sub-applications?
+
+    *By using the `exports.module = thingToExport` and `const thingToImport = require('./path/to/import')` we can separate our project into smaller more organized files.*
 
 ## Minimum Viable Product
 

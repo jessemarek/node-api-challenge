@@ -1,10 +1,10 @@
 const router = require('express').Router()
 
-//import the projects db
+//import the projects and actions DBs
 const Projects = require('../data/helpers/projectModel')
 const Actions = require('../data/helpers/actionModel')
 
-
+//Create a new project
 router.post('/', validateProject, (req, res) => {
     Projects.insert(req.body)
         .then(project => {
@@ -14,7 +14,7 @@ router.post('/', validateProject, (req, res) => {
             res.status(500).json({ errorMessage: "Server failed to create a new project!" })
         })
 })
-
+//Create a new action on an existing project
 router.post('/:id/actions', validateProjectId, validateAction, (req, res) => {
     Actions.insert(req.action)
         .then(action => {
@@ -29,7 +29,7 @@ router.post('/:id/actions', validateProjectId, validateAction, (req, res) => {
             res.status(500).json({ errorMessage: "Server failed to create new action!" })
         })
 })
-
+//Get a list of all projects
 router.get('/', (req, res) => {
     Projects.get()
         .then(projects => {
@@ -39,11 +39,11 @@ router.get('/', (req, res) => {
             res.status(500).json({ errorMessage: "Server failed to retrieve list of projects!" })
         })
 })
-
+//Get a project by ID
 router.get('/:id', validateProjectId, (req, res) => {
     res.status(200).json(req.project)
 })
-
+//Get a list of the actions from a specific project
 router.get('/:id/actions', validateProjectId, (req, res) => {
     Projects.getProjectActions(req.project.id)
         .then(actions => {
@@ -57,7 +57,7 @@ router.get('/:id/actions', validateProjectId, (req, res) => {
             res.status(500).json({ errorMessage: "Server failed to retrieve the actions for this project!" })
         })
 })
-
+//Remove a project
 router.delete('/:id', validateProjectId, (req, res) => {
     Projects.remove(req.project.id)
         .then(count => {
@@ -71,7 +71,7 @@ router.delete('/:id', validateProjectId, (req, res) => {
             res.status(500).json({ errorMessage: "Server failed to delete the project!" })
         })
 })
-
+//Update a project
 router.put('/:id', validateProjectId, validateProject, (req, res) => {
     Projects.update(req.project.id, req.body)
         .then(project => {
