@@ -10,7 +10,7 @@ router.post('/', validateProject, (req, res) => {
             res.status(201).json(project)
         })
         .catch(err => {
-            res.status(500).json({ errorMessage: "Server failed to create a new project" })
+            res.status(500).json({ errorMessage: "Server failed to create a new project!" })
         })
 })
 
@@ -20,20 +20,58 @@ router.get('/', (req, res) => {
             res.status(200).json(projects)
         })
         .catch(err => {
-            res.status(500).json({ errorMessage: "Server failed to retrieve list of projects" })
+            res.status(500).json({ errorMessage: "Server failed to retrieve list of projects!" })
         })
 })
 
+router.get('/:id', validateProjectId, (req, res) => {
+    res.status(200).json(req.project)
+})
+
+router.delete('/:id', validateProjectId, (req, res) => {
+    Projects.remove(req.params.id)
+        .then(count => {
+            if (count) {
+                res.status(200).json(req.project)
+            } else {
+                res.status(400).json({ errorMessage: "Project was not deleted!" })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ errorMessage: "Server failed to remove the project!" })
+        })
+})
+
+
+
+//Custom middleware
 function validateProject(req, res, next) {
     if (req.body.name && req.body.description) {
         next()
     } else if (!req.body.name) {
-        res.status(400).json({ errorMessage: "PLease provide a project name" })
+        res.status(400).json({ errorMessage: "PLease provide a project name!" })
     } else if (!req.body.description) {
-        res.status(400).json({ errorMessage: "PLease provide a project description" })
+        res.status(400).json({ errorMessage: "PLease provide a project description!" })
     } else {
-        res.status(400).json({ errorMessage: "PLease provide a project name and description" })
+        res.status(400).json({ errorMessage: "PLease provide a project name and description!" })
     }
+}
+
+function validateProjectId(req, res, next) {
+    const { id } = req.params
+    Projects.get(id)
+        .then(project => {
+            if (project) {
+                req.project = project
+                next()
+            }
+            else {
+                res.status(404).json({ errorMessage: "Invalid project ID!" })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ message: "Server failed to find a project with that ID!" })
+        })
 }
 
 module.exports = router
