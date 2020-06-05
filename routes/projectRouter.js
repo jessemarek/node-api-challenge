@@ -15,8 +15,19 @@ router.post('/', validateProject, (req, res) => {
         })
 })
 
-router.post('/:id/actions', validateProjectId, (req, res) => {
-
+router.post('/:id/actions', validateProjectId, validateAction, (req, res) => {
+    Actions.insert(req.action)
+        .then(action => {
+            if (action) {
+                res.status(201).json(action)
+            }
+            else {
+                res.status(500).json({ errorMessage: "Server failed to create new action!" })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ errorMessage: "Server failed to create new action!" })
+        })
 })
 
 router.get('/', (req, res) => {
@@ -108,14 +119,19 @@ function validateProjectId(req, res, next) {
 }
 
 function validateAction(req, res, next) {
-    if (req.body.name && req.body.description) {
+    if (req.body.description && req.body.notes) {
+        req.action = {
+            description: req.body.description,
+            notes: req.body.notes,
+            project_id: req.project.id
+        }
         next()
-    } else if (!req.body.name) {
-        res.status(400).json({ errorMessage: "PLease provide a project name!" })
+    } else if (!req.body.notes) {
+        res.status(400).json({ errorMessage: "PLease provide action notes!" })
     } else if (!req.body.description) {
-        res.status(400).json({ errorMessage: "PLease provide a project description!" })
+        res.status(400).json({ errorMessage: "PLease provide action description!" })
     } else {
-        res.status(400).json({ errorMessage: "PLease provide a project name and description!" })
+        res.status(400).json({ errorMessage: "PLease provide action notes and description!" })
     }
 }
 
