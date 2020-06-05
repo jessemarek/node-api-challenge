@@ -34,11 +34,25 @@ router.delete('/:id', validateProjectId, (req, res) => {
             if (count) {
                 res.status(200).json(req.project)
             } else {
-                res.status(400).json({ errorMessage: "Project was not deleted!" })
+                res.status(500).json({ errorMessage: "Server failed to delete the project!" })
             }
         })
         .catch(err => {
-            res.status(500).json({ errorMessage: "Server failed to remove the project!" })
+            res.status(500).json({ errorMessage: "Server failed to delete the project!" })
+        })
+})
+
+router.put('/:id', validateProjectId, validateProject, (req, res) => {
+    Projects.update(req.params.id, req.body)
+        .then(project => {
+            if (project) {
+                res.status(200).json(project)
+            } else {
+                res.status(500).json({ errorMessage: "Server did not update the project!" })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({ errorMessage: "Server did not update the project!" })
         })
 })
 
